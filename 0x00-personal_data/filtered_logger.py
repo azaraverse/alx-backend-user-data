@@ -5,10 +5,13 @@ from typing import List
 import re
 
 
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+
+
 def filter_datum(
         fields: List[str], redaction: str, message: str, separator: str
 ) -> str:
-    """ Returns a log message while obfuscation PII
+    """ Returns a log message while obfuscating PII
 
     Args:
         fields: All fields in the message to obfuscate
@@ -44,3 +47,15 @@ class RedactingFormatter(logging.Formatter):
             self.fields, self.REDACTION, super().format(record),
             self.SEPARATOR
         )
+
+
+def get_logger() -> logging.Logger:
+    """ A function that returns a logger object
+    """
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(RedactingFormatter())
+    logger.addHandler(stream_handler)
+    return logger

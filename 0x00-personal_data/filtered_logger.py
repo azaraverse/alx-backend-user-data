@@ -7,7 +7,7 @@ import re
 
 def filter_datum(
         fields: List[str], redaction: str, message: str, separator: str
-):
+) -> str:
     """ Returns a log message while obfuscation PII
 
     Args:

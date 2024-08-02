@@ -58,7 +58,7 @@ def get_logger() -> logging.Logger:
     logger.setLevel(logging.INFO)
     logger.propagate = False
     stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(RedactingFormatter())
+    stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
     logger.addHandler(stream_handler)
     return logger
 
@@ -81,3 +81,22 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=database
     )
     return connection
+
+
+def main() -> None:
+    """ Main function
+    """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users")
+    logger = get_logger()
+
+    for item in cursor:
+        message = f"name={item[0]}; email={item[1]}; phone={item[2]}; ssn={item[3]}; password={item[4]}; ip={item[5]}; last_login={item[6]}; user_agent={item[7]};"  # nopep8
+        logger.info(message)
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()

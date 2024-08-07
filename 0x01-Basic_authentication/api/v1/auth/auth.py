@@ -2,6 +2,7 @@
 """ API Basic Authentication """
 from flask import request
 from typing import List, TypeVar
+import re
 
 
 class Auth:
@@ -13,12 +14,17 @@ class Auth:
         if not excluded_paths:
             return True
 
-        excluded_paths_set = set(excluded_paths)
-
         if path and not path.endswith('/'):
             path += '/'
 
-        return path not in excluded_paths_set
+        for excluded_path in excluded_paths:
+            # check if the excluded paths end with *
+            if excluded_path.endswith('*'):
+                if path.startswith(excluded_path[:-1]):
+                    return False
+            elif path == excluded_path:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """ Authorization header public method instance

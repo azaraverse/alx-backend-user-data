@@ -23,7 +23,9 @@ class BasicAuth(Auth):
             self, base64_authorization_header: str
     ) -> str:
         """"""
-        if base64_authorization_header is None or type(base64_authorization_header) != str:  # nopep8
+        if base64_authorization_header is None or type(
+            base64_authorization_header
+        ) != str:
             return None
         try:
             base64_decoded = base64.b64decode(base64_authorization_header)

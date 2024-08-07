@@ -19,21 +19,21 @@ if os.getenv('AUTH_TYPE') == auth:
 
 
 @app.errorhandler(404)
-def not_found(error) -> tuple:
+def not_found(error) -> str:
     """ Not found handler
     """
     return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(401)
-def unauthorized(error) -> tuple:
+def unauthorized(error) -> str:
     """ Unauthorized error handler
     """
     return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
-def forbidden(error) -> tuple:
+def forbidden(error) -> str:
     """ Forbidden error handler
     """
     return jsonify({"error": "Forbidden"}), 403

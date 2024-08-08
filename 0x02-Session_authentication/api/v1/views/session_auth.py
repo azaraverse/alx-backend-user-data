@@ -3,7 +3,7 @@
 """
 from typing import Tuple, Dict
 from api.v1.views import app_views
-from flask import jsonify, request, make_response
+from flask import jsonify, request, make_response, abort
 from models.user import User
 import os
 
@@ -12,7 +12,14 @@ import os
         '/auth_session/login', methods=['POST'], strict_slashes=False
 )
 def login() -> Tuple[Dict, int]:
-    """"""
+    """ POST /api/v1/auth_session/login
+
+    Return:
+      - User object based on credentials
+      - 400 if email or password missing
+      - 401 if wrong password submitted
+      - 404 if the User doesn't exist
+    """
     email = request.form.get("email")
     password = request.form.get("password")
     if not email:
@@ -33,3 +40,17 @@ def login() -> Tuple[Dict, int]:
     resp.set_cookie(os.getenv('SESSION_NAME'), session_id)
 
     return resp
+
+
+@app_views.route(
+    '/auth_session/logout', methods=['DELETE'], strict_slashes=False
+)
+def logout() -> Tuple[str, int]:
+    """ DELETE /api/v1/auth_session/logout
+    """
+    from api.v1.app import auth
+
+    session_destroyed = auth.destroy_session(request)
+    if session_destroyed == False:
+        abort(404)
+    return jsonify({}), 200

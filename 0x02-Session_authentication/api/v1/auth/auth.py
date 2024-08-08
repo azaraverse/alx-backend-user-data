@@ -2,7 +2,7 @@
 """ API Basic Authentication """
 from flask import request
 from typing import List, TypeVar
-import re
+import os
 
 
 class Auth:
@@ -39,3 +39,11 @@ class Auth:
         """ Current user public method instance
         """
         return None
+
+    def session_cookie(self, request=None):
+        """ Returns a cookie value from a request
+        """
+        if request is None:
+            return None
+        value = request.cookies.get(os.getenv('SESSION_NAME'))
+        return value

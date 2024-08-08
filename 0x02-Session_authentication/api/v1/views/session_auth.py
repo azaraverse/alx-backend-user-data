@@ -51,6 +51,6 @@ def logout() -> Tuple[str, int]:
     from api.v1.app import auth
 
     session_destroyed = auth.destroy_session(request)
-    if session_destroyed == False:
+    if session_destroyed is False:
         abort(404)
     return jsonify({}), 200

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Session Auth Flask View
 """
-from typing import Tuple, Dict
+from typing import Any
 from api.v1.views import app_views
 from flask import jsonify, request, make_response, abort
 from models.user import User
@@ -11,7 +11,7 @@ import os
 @app_views.route(
         '/auth_session/login', methods=['POST'], strict_slashes=False
 )
-def login() -> Tuple[Dict, int]:
+def login() -> Any:
     """ POST /api/v1/auth_session/login
 
     Return:
@@ -37,7 +37,7 @@ def login() -> Tuple[Dict, int]:
     from api.v1.app import auth
     session_id = auth.create_session(user.id)
     resp = make_response(jsonify(user.to_json()))
-    resp.set_cookie(os.getenv('SESSION_NAME'), session_id)
+    resp.set_cookie(str(os.getenv('SESSION_NAME')), session_id)
 
     return resp
 
@@ -45,7 +45,7 @@ def login() -> Tuple[Dict, int]:
 @app_views.route(
     '/auth_session/logout', methods=['DELETE'], strict_slashes=False
 )
-def logout() -> Tuple[str, int]:
+def logout() -> Any:
     """ DELETE /api/v1/auth_session/logout
     """
     from api.v1.app import auth

@@ -46,7 +46,25 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user(self):
+    def find_user_by(self, **kwargs) -> User:
         """ Takes in arbitrary keywords and returns the first row found in
         the users table, filtered by this method's input arguments
         """
+        try:
+            user = self._session.query(User)
+            filtered_user = user.filter_by(**kwargs).one()
+            return filtered_user
+        except NoResultFound:
+            raise NoResultFound
+        except InvalidRequestError:
+            raise InvalidRequestError
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """ Updates a user object based on user_id and field to update
+        """
+        user_to_update = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            if not hasattr(user_to_update, key):
+                raise ValueError
+            setattr(user_to_update, key, value)
+        self._session.commit()

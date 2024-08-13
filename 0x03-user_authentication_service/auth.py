@@ -31,7 +31,7 @@ class Auth:
 
     def register_user(
             self, email: str, password: str
-    ) -> Union[None, User]:
+    ) -> User:
         """ A method that registers a new user and hashes the new user's
         password
         """

@@ -10,7 +10,7 @@ Base = declarative_base()
 
 
 class User(Base):
-    """ User model for the users table
+    """ User model that inherits from Base
     """
     __tablename__ = "users"
 
